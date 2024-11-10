@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itheima.dao.CostDao" >
+
+    <!--分页查询-->
+    <select id="getCostList" parameterType="Cost" resultType="Cost">
+        select * from d_cost
+        <where>
+            <if test="dormitoryid!=null and dormitoryid!='' ">
+                and  dormitoryid like  '%${dormitoryid}%'
+            </if>
+        </where>
+        ORDER BY  id asc
+        limit #{currentPage},#{pageSize}
+    </select>
+
+    <!--查询数据总数-->
+    <select id="totalCount"  resultType="Integer">
+        select count(id) from d_Cost
+        <where>
+            <if test="dormitoryid!=null and dormitoryid!='' ">
+                and  dormitoryid like  '%${dormitoryid}%'
+            </if>
+        </where>
+    </select>
+    
+ 	<select id="findCostById"  parameterType="Integer" resultType="Cost" >
+        select * from d_cost where id=#{id}
+    </select>
+    
+    <!--添加学生信息-->
+    <insert id="addCost" parameterType="Cost" keyProperty="id" useGeneratedKeys="true">
+        insert into d_Cost (dormitoryid,waterprice,electricityprice,sumprice,status,remark,create_time)
+        values(#{dormitoryid},#{waterprice},#{electricityprice},#{sumprice},#{status},#{remark},now())
+    </insert>
+    
+     <update id="updateCost" parameterType="Cost">
+        update d_Cost
+        <set>
+            <if test="dormitoryid!=null and dormitoryid!=0">
+                dormitoryid=#{dormitoryid},
+            </if>
+            <if test="waterprice !=null and waterprice !=''">
+                waterprice=#{waterprice},
+            </if>
+            <if test="electricityprice !=null and electricityprice !=''">
+                electricityprice=#{electricityprice},
+            </if>
+             <if test="sumprice !=null and sumprice !=0">
+                sumprice=#{sumprice},
+            </if>
+            <if test="status !=null and status !=''">
+                status=#{status},
+            </if>
+            <if test="remark !=null and remark !=''">
+                remark=#{remark},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    
+     <delete id="deleteCost" parameterType="Integer" >
+        delete from d_Cost where id=#{id}
+    </delete>
+
+    <select id="getAll" resultType="Cost">
+        select * from d_Cost;
+    </select>
+
+</mapper>
